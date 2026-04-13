@@ -1,0 +1,169 @@
+"use client";
+
+import Link from "next/link";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+
+const navItems = [
+  { href: "/", label: "Hem" },
+  { href: "/#jobbsokande", label: "För jobbsökande" },
+  { href: "/#foretag", label: "För företag" },
+  { href: "/lediga-tjanster", label: "Lediga tjänster" },
+  { href: "/#vara-tjanster", label: "Våra tjänster" },
+  { href: "/#om-oss", label: "Om oss" },
+  { href: "/#kontakt", label: "Kontakt" },
+];
+
+function isNavActive(pathname: string, hash: string, href: string) {
+  if (href === "/") {
+    return pathname === "/" && !hash;
+  }
+  if (href.startsWith("/#")) {
+    return pathname === "/" && hash === href.slice(1);
+  }
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+export default function Header() {
+  const [isOpen, setIsOpen] = useState(false);
+  const closeMenu = () => setIsOpen(false);
+  const headerRef = useRef<HTMLElement>(null);
+
+  const pathname = usePathname();
+  const [hash, setHash] = useState("");
+
+  useEffect(() => {
+    const syncHash = () => setHash(typeof window !== "undefined" ? window.location.hash : "");
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    return () => window.removeEventListener("hashchange", syncHash);
+  }, []);
+
+  useEffect(() => {
+    setHash(typeof window !== "undefined" ? window.location.hash : "");
+  }, [pathname]);
+
+  // Close mobile menu when viewport becomes desktop.
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      if (event.matches) {
+        setIsOpen(false);
+      }
+    };
+
+    mediaQuery.addEventListener("change", handleChange);
+    return () => {
+      mediaQuery.removeEventListener("change", handleChange);
+    };
+  }, []);
+
+  // Close mobile menu when clicking outside header.
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent | TouchEvent) => {
+      if (!isOpen) return;
+      if (!headerRef.current) return;
+
+      const target = event.target as Node;
+      if (!headerRef.current.contains(target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener("touchstart", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("touchstart", handleOutsideClick);
+    };
+  }, [isOpen]);
+
+  return (
+    <header ref={headerRef} className="sticky top-0 z-50 border-b border-zinc-200 bg-white text-black">
+      <nav className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <Link href="/" className="shrink-0">
+          <Image
+            src="/logo.png"
+            alt="Dream Talent"
+            width={400}
+            height={50}
+            priority
+            className="h-auto w-[110px] object-contain [filter:contrast(1.2)] sm:w-[128px]"
+          />
+        </Link>
+
+        {/* Desktop navigation links */}
+        <div className="hidden items-center gap-6 md:flex">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`text-sm ${
+                isNavActive(pathname, hash, item.href)
+                  ? "font-semibold text-zinc-900"
+                  : "text-zinc-700 hover:text-zinc-900"
+              }`}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+
+        <Link
+          href="/lediga-tjanster"
+          className="hidden rounded-md bg-[#080b22] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#13183b] md:inline-flex"
+        >
+          Se lediga tjänster
+        </Link>
+
+        {/* Mobile hamburger button */}
+        <button
+          type="button"
+          onClick={() => setIsOpen((prev) => !prev)}
+          className="inline-flex items-center justify-center rounded-md border border-zinc-300 p-2 text-zinc-800 transition hover:bg-zinc-100 md:hidden"
+          aria-label={isOpen ? "Stäng meny" : "Öppna meny"}
+          aria-expanded={isOpen}
+          aria-controls="mobile-menu"
+        >
+          <span className="text-xl leading-none">{isOpen ? "×" : "☰"}</span>
+        </button>
+      </nav>
+
+      {isOpen && (
+        <div
+          id="mobile-menu"
+          className="border-t border-zinc-200 bg-white px-4 py-4 md:hidden"
+        >
+          {/* Mobile dropdown menu */}
+          <div className="mx-auto flex max-w-7xl flex-col gap-2">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={closeMenu}
+                className={`rounded-md px-3 py-2 text-sm transition ${
+                  isNavActive(pathname, hash, item.href)
+                    ? "bg-zinc-100 font-semibold text-zinc-900"
+                    : "text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900"
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+
+            <Link
+              href="/lediga-tjanster"
+              onClick={closeMenu}
+              className="mt-2 inline-flex items-center justify-center rounded-md bg-[#080b22] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#13183b]"
+            >
+              Se lediga tjänster
+            </Link>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+}
