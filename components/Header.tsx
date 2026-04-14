@@ -2,8 +2,21 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
+
+function subscribeHash(onStoreChange: () => void) {
+  window.addEventListener("hashchange", onStoreChange);
+  return () => window.removeEventListener("hashchange", onStoreChange);
+}
+
+function getHashSnapshot() {
+  return window.location.hash;
+}
+
+function getServerHashSnapshot() {
+  return "";
+}
 
 const navItems = [
   { href: "/", label: "Hem" },
@@ -31,18 +44,20 @@ export default function Header() {
   const headerRef = useRef<HTMLElement>(null);
 
   const pathname = usePathname();
-  const [hash, setHash] = useState("");
-
+  const hashFromWindow = useSyncExternalStore(
+    subscribeHash,
+    getHashSnapshot,
+    getServerHashSnapshot
+  );
+  /** Re-read hash when client route changes (hashchange fires only for # links). */
+  const [hashAtPath, setHashAtPath] = useState("");
   useEffect(() => {
-    const syncHash = () => setHash(typeof window !== "undefined" ? window.location.hash : "");
-    syncHash();
-    window.addEventListener("hashchange", syncHash);
-    return () => window.removeEventListener("hashchange", syncHash);
-  }, []);
-
-  useEffect(() => {
-    setHash(typeof window !== "undefined" ? window.location.hash : "");
+    queueMicrotask(() => {
+      setHashAtPath(window.location.hash);
+    });
   }, [pathname]);
+
+  const hash = pathname === "/" ? hashFromWindow || hashAtPath : "";
 
   // Close mobile menu when viewport becomes desktop.
   useEffect(() => {
@@ -83,15 +98,15 @@ export default function Header() {
 
   return (
     <header ref={headerRef} className="sticky top-0 z-50 border-b border-zinc-200 bg-white text-black">
-      <nav className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="shrink-0">
+      <nav className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-0 ">
+        <Link href="/" className="shrink-0 -ml-4 sm:-ml-6 lg:-ml-8">
           <Image
-            src="/logo.png"
+            src="/logo1.png"
             alt="Dream Talent"
             width={400}
-            height={50}
+            height={70}
             priority
-            className="h-auto w-[110px] object-contain [filter:contrast(1.2)] sm:w-[128px]"
+            className="h-auto w-[180px] object-contain mt-4 [filter:contrast(1.2)] sm:w-[250px]"
           />
         </Link>
 
