@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ForetagSection } from "@/components/ForetagSection";
 
 {/* Data for the homepage. In a real app this would likely come from a CMS or API, but hardcoded for now. */}
 const jobSeekerCards = [
@@ -39,21 +40,6 @@ const jobSeekerCtas = [
     text: "Jobba flexibelt som konsult hos oss med spännande uppdrag",
     button: "Ansök som konsult",
     href: "/#kontakt",
-  },
-];
-{/* Fördelar och tjänster för företag. */}
-const companyFeatures = [
-  {
-    title: "Snabb process",
-    text: "Vi levererar kandidater inom 2 veckor",
-  },
-  {
-    title: "Hög träffsäkerhet",
-    text: "Avancerad matchningsprocess",
-  },
-  {
-    title: "Hållbarhet & mångfald",
-    text: "Fokus i varje process",
   },
 ];
 
@@ -174,53 +160,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section
-        id="foretag"
-        className="scroll-mt-24 border-b border-zinc-200 bg-white py-16 sm:py-20"
-      >
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-zinc-900 sm:text-4xl">För företag</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-zinc-600">
-              Vi hjälper er att hitta rätt talanger för er organisation
-            </p>
-          </div>
-
-          <div className="mt-12 grid items-center gap-10 lg:grid-cols-2">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
-              <Image
-                src="/bild2.jpg"
-                alt="Möte i professionell miljö"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            </div>
-            <div>
-              <h3 className="text-2xl font-semibold text-zinc-900">
-                Varför välja Dream Talent?
-              </h3>
-              <ul className="mt-6 space-y-4">
-                {companyFeatures.map((f) => (
-                  <li key={f.title} className="flex gap-3">
-                    <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-zinc-900" />
-                    <div>
-                      <p className="font-medium text-zinc-900">{f.title}</p>
-                      <p className="text-sm text-zinc-600">{f.text}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/#kontakt"
-                className="mt-8 inline-flex w-full items-center justify-center rounded-md bg-[#080b22] px-6 py-3 text-sm font-medium text-white transition hover:bg-[#13183b] sm:w-auto"
-              >
-                Kontakta oss
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ForetagSection />
 
       <section
         id="vara-tjanster"
@@ -250,14 +190,62 @@ export default function Home() {
 
       <section
         id="om-oss"
-        className="scroll-mt-24 border-b border-zinc-200 bg-white py-16 sm:py-20"
+        className="scroll-mt-24 border-b border-black/5 bg-gradient-to-b from-[#b9c9ba] via-[#b0c4b1] to-[#a5b6a6] py-16 sm:py-28"
       >
-        <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-zinc-900 sm:text-4xl">Om oss</h2>
-          <p className="mt-6 text-lg leading-relaxed text-zinc-600">
-            Dream Talent är er partner för hållbar och framgångsrik rekrytering. Vi kombinerar
-            personlig service med tydliga processer så att rätt människa möter rätt roll.
-          </p>
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-semibold tracking-tight text-zinc-950 sm:text-4xl">
+              Om oss
+            </h2>
+          </div>
+
+          <div className="mt-12 rounded-[2rem] border border-white/50 bg-[#f2f6f4]/95 p-8 shadow-[0_28px_60px_-20px_rgba(15,23,42,0.22)] backdrop-blur-[2px] sm:mt-14 sm:p-10 md:p-12 lg:p-14">
+            <div className="grid gap-12 md:grid-cols-[minmax(0,17rem)_1fr] md:items-start md:gap-14 lg:gap-16">
+              <div className="flex justify-center md:justify-start md:pt-1">
+                <div className="group relative">
+                  <div
+                    aria-hidden
+                    className="absolute -inset-1 rounded-full bg-gradient-to-br from-white/80 to-white/20 opacity-80 blur-sm transition group-hover:opacity-100"
+                  />
+                  <div className="relative h-52 w-52 overflow-hidden rounded-full shadow-[0_24px_48px_-16px_rgba(15,23,42,0.35)] ring-[3px] ring-white sm:h-[17rem] sm:w-[17rem]">
+                    <Image
+                      src="/saraSellerfors.jpg"
+                      alt="Sara Sellerfors"
+                      width={272}
+                      height={272}
+                      className="h-full w-full object-cover object-top transition duration-500 ease-out group-hover:scale-[1.03]"
+                      sizes="(min-width: 768px) 272px, 208px"
+                      priority
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="min-w-0 max-w-prose text-left md:max-w-none">
+                <h3 className="text-[1.35rem] font-semibold leading-snug tracking-tight text-zinc-950 sm:text-2xl sm:leading-snug">
+                  Sara Sellerfors – expert inom social hållbarhet och rekrytering
+                </h3>
+                <p className="mt-6 text-[15px] leading-[1.75] text-zinc-600 sm:text-base">
+                  DreamTalent drivs av Sara Sellerfors som har över 25 års erfarenhet inom social
+                  hållbarhet och rekrytering. Hon har under sin karriär arbetat som chef och ledare
+                  både inom offentlig sektor och näringslivet. Hennes arbetssätt har alltid varit
+                  starkt präglat av affärsfokus och ett stort engagemang för människor – särskilt för
+                  att ge dem som inte alltid passar in i den traditionella mallen en chans på
+                  arbetsmarknaden.
+                </p>
+                <p className="mt-5 text-[15px] leading-[1.75] text-zinc-600 sm:text-base">
+                  Sara har tidigare varit VD för IKEAs första sociala företag och har lett
+                  banbrytande initiativ där affärsnytta kombineras med samhällsansvar. Med djup
+                  förståelse för både rekrytering, social hållbarhet och ledarskap hjälper hon idag
+                  arbetsgivare att bygga inkluderande och hållbara team.
+                </p>
+                <blockquote className="mt-8 border-l-[3px] border-[#080b22] pl-5 text-[15px] font-medium leading-[1.75] text-zinc-900 sm:text-base">
+                  Hon brinner för att skapa arbetsplatser där människor får växa – även de som inte
+                  alltid passar in i den traditionella normen.
+                </blockquote>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
