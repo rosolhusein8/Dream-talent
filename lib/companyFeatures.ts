@@ -1,4 +1,11 @@
-export type CompanyFeatureIcon = "clock" | "target" | "shield" | "leaf";
+/*
+ * Fil: lib/companyFeatures.ts
+ * Syfte: Innehållsdata för företagssektionen.
+ * Vad koden gör: Exporterar feature-texter och ikon-typer som UI-komponenter använder.
+ * Lär dig: Bra exempel på att separera innehåll från komponentkod.
+ * Felsökning: Om text eller ikon inte stämmer i företagsdelen, börja här.
+ */
+export type CompanyFeatureIcon = "clock" | "target" | "leaf";
 
 export type CompanyFeature = {
   icon: CompanyFeatureIcon;
@@ -13,10 +20,6 @@ export const companyFeatures: CompanyFeature[] = [
   {
     icon: "target",
     text: "Hög träffsäkerhet med vår avancerade matchningsprocess",
-  },
-  {
-    icon: "shield",
-    text: "6 månaders garanti på alla våra rekryteringar",
   },
   {
     icon: "leaf",

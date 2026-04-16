@@ -1,3 +1,10 @@
+/*
+ * Fil: components/Header.tsx
+ * Syfte: Huvudnavigering högst upp på sidan.
+ * Vad koden gör: Visar logotyp, länkar och mobilmeny beroende på skärmstorlek.
+ * Lär dig: Bra fil att studera för state, responsiv UI och menyinteraktioner.
+ * Felsökning: Kolla länkar, meny-state och scroll-/viewport-logik först.
+ */
 "use client";
 
 import Link from "next/link";
@@ -28,6 +35,7 @@ const navItems = [
   { href: "/#kontakt", label: "Kontakt" },
 ];
 
+// Hjälper headern att markera vilken länk som är aktiv just nu.
 function isNavActive(pathname: string, hash: string, href: string) {
   if (href === "/") {
     return pathname === "/" && !hash;
@@ -61,7 +69,7 @@ export default function Header() {
 
   // Close mobile menu when viewport becomes desktop.
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const mediaQuery = window.matchMedia("(min-width: 1024px)");
 
     const handleChange = (event: MediaQueryListEvent) => {
       if (event.matches) {
@@ -98,20 +106,21 @@ export default function Header() {
 
   return (
     <header ref={headerRef} className="sticky top-0 z-50 border-b border-zinc-200 bg-white text-black">
-      <nav className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-0 ">
-        <Link href="/" className="shrink-0 -ml-4 sm:-ml-6 lg:-ml-8">
+      {/* Toppraden: logotyp, desktop-länkar, CTA-knapp och mobilknapp. */}
+      <nav className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-4 sm:px-6">
+        <Link href="/" className="shrink-0">
           <Image
             src="/logo1.png"
             alt="Dream Talent"
             width={400}
             height={70}
             priority
-            className="h-auto w-[180px] object-contain mt-4 [filter:contrast(1.2)] sm:w-[250px]"
+            className="h-auto w-[160px] object-contain [filter:contrast(1.2)] sm:w-[210px]"
           />
         </Link>
 
         {/* Desktop navigation links */}
-        <div className="hidden items-center gap-6 md:flex">
+        <div className="hidden items-center gap-6 lg:flex">
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -129,7 +138,7 @@ export default function Header() {
 
         <Link
           href="/lediga-tjanster"
-          className="hidden rounded-md bg-[#080b22] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#13183b] md:inline-flex"
+          className="hidden rounded-md bg-[#080b22] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#13183b] lg:inline-flex"
         >
           Se lediga tjänster
         </Link>
@@ -138,7 +147,7 @@ export default function Header() {
         <button
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}
-          className="inline-flex items-center justify-center rounded-md border border-zinc-300 p-2 text-zinc-800 transition hover:bg-zinc-100 md:hidden"
+          className="inline-flex items-center justify-center rounded-md border border-zinc-300 p-2 text-zinc-800 transition hover:bg-zinc-100 lg:hidden"
           aria-label={isOpen ? "Stäng meny" : "Öppna meny"}
           aria-expanded={isOpen}
           aria-controls="mobile-menu"
@@ -150,7 +159,7 @@ export default function Header() {
       {isOpen && (
         <div
           id="mobile-menu"
-          className="border-t border-zinc-200 bg-white px-4 py-4 md:hidden"
+          className="border-t border-zinc-200 bg-white px-4 py-4 lg:hidden"
         >
           {/* Mobile dropdown menu */}
           <div className="mx-auto flex max-w-7xl flex-col gap-2">

@@ -1,3 +1,10 @@
+/*
+ * Fil: app/kontakt/layout.tsx
+ * Syfte: Metadata/layout för kontaktsidan.
+ * Vad koden gör: Sätter titel och beskrivning för SEO och browser-flik.
+ * Lär dig: Bra exempel på Next.js metadata i App Router.
+ * Felsökning: Om sidtitel eller meta inte stämmer, kontrollera denna fil.
+ */
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

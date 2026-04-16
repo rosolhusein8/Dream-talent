@@ -1,3 +1,10 @@
+/*
+ * Fil: lib/mockJobs.ts
+ * Syfte: Mockade jobbannonser och tillhörande typer.
+ * Vad koden gör: Innehåller exempeljobb som används i listor och detaljsidor.
+ * Lär dig: Bra ställe att förstå vilka fält ett jobbobjekt behöver ha.
+ * Felsökning: Om jobbsidor renderar fel eller saknar data, kontrollera jobbfälten här.
+ */
 export type JobCategory =
   | "Teknik"
   | "Design"
@@ -59,6 +66,7 @@ export const cityFilterOptions: { value: "all" | CityFilterId; label: string }[]
     { value: "hybrid", label: "Hybrid" },
   ];
 
+// Mockdata för att kunna bygga och testa jobbsidor innan riktig databas finns.
 export const mockJobs: Job[] = [
   {
     title: "UX/UI Designer",

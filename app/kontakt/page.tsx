@@ -1,9 +1,17 @@
+/*
+ * Fil: app/kontakt/page.tsx
+ * Syfte: Kontaktformulär för besökare.
+ * Vad koden gör: Visar formulär, validerar användarinput och skickar kontaktmeddelanden.
+ * Lär dig: Bra fil för att förstå formulär, useState och klientvalidering.
+ * Felsökning: Kontrollera validateContactForm, submitError och API-svaret från /api/contact.
+ */
 "use client";
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { type ContactFormErrors, validateContactForm } from "@/lib/contactValidation";
 
 export default function KontaktPage() {
+  // State för formulärfält, valideringsfel och feedback efter submit.
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -78,6 +86,7 @@ export default function KontaktPage() {
 
   return (
     <main className="min-h-screen bg-[url('/bild3.jpg')] bg-cover bg-center bg-no-repeat px-4 py-10 sm:py-16">
+      {/* Själva kontaktkortet med formulär. */}
       <div className="mx-auto w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl sm:p-8">
         <div className="flex items-center justify-between gap-3">
           <h1 className="text-2xl font-bold text-zinc-900 sm:text-3xl">Kontakta oss</h1>
@@ -189,6 +198,7 @@ export default function KontaktPage() {
         </form>
       </div>
 
+      {/* Success-popup visas först efter lyckad POST till kontakt-API:t. */}
       {showSuccessPopup ? (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-transparent px-4"

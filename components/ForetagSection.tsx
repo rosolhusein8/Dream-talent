@@ -1,3 +1,10 @@
+/*
+ * Fil: components/ForetagSection.tsx
+ * Syfte: Sektionen "För företag" på startsidan.
+ * Vad koden gör: Visar innehåll för företag och öppnar kontaktmodalen vid behov.
+ * Lär dig: Bra exempel på hur en sektion kan hållas separat från startsidan.
+ * Felsökning: Kontrollera props, modal-state och bild-/textinnehåll här först.
+ */
 "use client";
 
 import Image from "next/image";
@@ -17,14 +24,16 @@ export function ForetagSection() {
       >
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-zinc-900 sm:text-4xl">För företag</h2>
+            <h2 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
+              För företag
+            </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-zinc-600">
               Vi hjälper er att hitta rätt talanger för er organisation
             </p>
           </div>
 
-          <div className="mt-12 grid items-center gap-10 lg:grid-cols-2">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
+          <div className="mt-12 grid items-stretch gap-10 lg:grid-cols-2">
+            <div className="relative min-h-[280px] overflow-hidden rounded-2xl sm:min-h-[340px] lg:min-h-full">
               <Image
                 src="/bild2.jpg"
                 alt="Möte i professionell miljö"
@@ -48,7 +57,7 @@ export function ForetagSection() {
               <button
                 type="button"
                 onClick={() => setModalOpen(true)}
-                className="mt-8 inline-flex w-full items-center justify-center rounded-md bg-[#080b22] px-6 py-3 text-sm font-medium text-white transition hover:bg-[#13183b] sm:w-auto"
+                className="mt-8 inline-flex min-h-[44px] w-full items-center justify-center rounded-md bg-[#080b22] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#13183b] sm:w-auto"
               >
                 Kontakta oss
               </button>

@@ -1,3 +1,10 @@
+/*
+ * Fil: lib/contactValidation.ts
+ * Syfte: Validering för vanliga kontaktformuläret.
+ * Vad koden gör: Returnerar felobjekt för ogiltiga fält.
+ * Lär dig: Bra nybörjarfil för att förstå enkel formulärvalidering i TypeScript.
+ * Felsökning: Om formuläret säger fel sak eller missar fel, kontrollera reglerna här.
+ */
 export type ContactFormErrors = {
   name?: string;
   email?: string;

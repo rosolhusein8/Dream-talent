@@ -1,3 +1,10 @@
+/*
+ * Fil: app/api/contact/route.ts
+ * Syfte: API för kontakt- och företagsformulär.
+ * Vad koden gör: Validerar inkommande data och returnerar svar till frontend.
+ * Lär dig: Studera hur olika formulärtyper kan dela samma endpoint.
+ * Felsökning: Kontrollera vilken validator som körs och vilket payload-format som skickas in.
+ */
 import { NextResponse } from "next/server";
 import { validateCompanyContact } from "@/lib/companyContactValidation";
 import { validateContactForm } from "@/lib/contactValidation";

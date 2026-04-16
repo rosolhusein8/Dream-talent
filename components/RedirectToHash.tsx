@@ -1,3 +1,10 @@
+/*
+ * Fil: components/RedirectToHash.tsx
+ * Syfte: Skickar gamla routes vidare till en sektion på startsidan.
+ * Vad koden gör: När komponenten laddas redirectar den till `/#section`.
+ * Lär dig: Enkel klientredirect med useEffect.
+ * Felsökning: Om redirect inte sker, kontrollera section-prop och routermiljö.
+ */
 "use client";
 
 import { useEffect } from "react";

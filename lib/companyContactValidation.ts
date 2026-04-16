@@ -1,3 +1,10 @@
+/*
+ * Fil: lib/companyContactValidation.ts
+ * Syfte: Validering för företagskontaktformuläret.
+ * Vad koden gör: Kontrollerar att viktiga fält är ifyllda och rimliga.
+ * Lär dig: Jämför med contactValidation.ts för att se specialiserad validering.
+ * Felsökning: Om företagsmodalen visar konstiga fel, kontrollera reglerna här.
+ */
 export type CompanyContactErrors = {
   companyName?: string;
   contactPerson?: string;

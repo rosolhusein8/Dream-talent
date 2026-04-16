@@ -1,3 +1,10 @@
+/*
+ * Fil: components/CompanyContactModal.tsx
+ * Syfte: Modal för företagsförfrågningar.
+ * Vad koden gör: Visar formulär, validerar fält och skickar data till kontakt-API:t.
+ * Lär dig: Studera denna fil för modalstruktur, formulärhantering och felmeddelanden.
+ * Felsökning: Titta på validateCompanyContact, submitError och /api/contact.
+ */
 "use client";
 
 import {
@@ -31,6 +38,7 @@ type Props = {
 };
 
 export function CompanyContactModal({ open, onClose }: Props) {
+  // State för hela företagsformuläret.
   const titleId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -62,6 +70,7 @@ export function CompanyContactModal({ open, onClose }: Props) {
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
+  // Submit-flöde för företagsförfrågan.
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSubmitError(null);
@@ -117,7 +126,7 @@ export function CompanyContactModal({ open, onClose }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+      className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-4"
       role="presentation"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -129,15 +138,16 @@ export function CompanyContactModal({ open, onClose }: Props) {
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative z-10 w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl sm:p-8"
+        className="relative z-10 w-full max-w-[680px] rounded-2xl bg-white p-5 shadow-2xl sm:p-6"
         onMouseDown={(e) => e.stopPropagation()}
       >
+        {/* Header i modalen: titel, beskrivning och stängknapp. */}
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 id={titleId} className="text-xl font-bold tracking-tight text-zinc-900 sm:text-2xl">
+            <h2 id={titleId} className="text-2xl font-bold tracking-tight text-zinc-900">
               Kontakta oss för rekryteringsbehov
             </h2>
-            <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+            <p className="mt-1.5 text-sm leading-relaxed text-zinc-600">
               Berätta om dina rekryteringsbehov så återkommer vi med en skräddarsydd lösning.
             </p>
           </div>
@@ -153,7 +163,8 @@ export function CompanyContactModal({ open, onClose }: Props) {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4" noValidate>
+        {/* Formuläret skickar till samma API som vanliga kontaktformuläret. */}
+        <form onSubmit={handleSubmit} className="mt-4 space-y-3.5" noValidate>
           {submitError ? (
             <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
               {submitError}
@@ -173,7 +184,7 @@ export function CompanyContactModal({ open, onClose }: Props) {
                 setCompanyName(e.target.value);
                 clearField("companyName");
               }}
-              className={`w-full rounded-lg border bg-zinc-100 px-3 py-2.5 text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-zinc-500 focus:bg-white disabled:opacity-60 ${
+              className={`w-full rounded-lg border bg-zinc-100 px-3 py-2 text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-zinc-500 focus:bg-white disabled:opacity-60 ${
                 errors.companyName ? "border-red-500" : "border-zinc-200"
               }`}
               placeholder="Ditt företags namn"
@@ -197,7 +208,7 @@ export function CompanyContactModal({ open, onClose }: Props) {
                 setContactPerson(e.target.value);
                 clearField("contactPerson");
               }}
-              className={`w-full rounded-lg border bg-zinc-100 px-3 py-2.5 text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-zinc-500 focus:bg-white disabled:opacity-60 ${
+              className={`w-full rounded-lg border bg-zinc-100 px-3 py-2 text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-zinc-500 focus:bg-white disabled:opacity-60 ${
                 errors.contactPerson ? "border-red-500" : "border-zinc-200"
               }`}
               placeholder="För- och efternamn"
@@ -208,7 +219,7 @@ export function CompanyContactModal({ open, onClose }: Props) {
             ) : null}
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
             <div>
               <label htmlFor="co-email" className="mb-1 block text-sm font-semibold text-zinc-900">
                 E-post <span className="text-red-600">*</span>
@@ -222,7 +233,7 @@ export function CompanyContactModal({ open, onClose }: Props) {
                   setEmail(e.target.value);
                   clearField("email");
                 }}
-                className={`w-full rounded-lg border bg-zinc-100 px-3 py-2.5 text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-zinc-500 focus:bg-white disabled:opacity-60 ${
+                className={`w-full rounded-lg border bg-zinc-100 px-3 py-2 text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-zinc-500 focus:bg-white disabled:opacity-60 ${
                   errors.email ? "border-red-500" : "border-zinc-200"
                 }`}
                 placeholder="foretagets.email@exempel.se"
@@ -243,7 +254,7 @@ export function CompanyContactModal({ open, onClose }: Props) {
                   setPhone(e.target.value);
                   clearField("phone");
                 }}
-                className={`w-full rounded-lg border bg-zinc-100 px-3 py-2.5 text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-zinc-500 focus:bg-white disabled:opacity-60 ${
+                className={`w-full rounded-lg border bg-zinc-100 px-3 py-2 text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-zinc-500 focus:bg-white disabled:opacity-60 ${
                   errors.phone ? "border-red-500" : "border-zinc-200"
                 }`}
                 placeholder="+46 8 123 456"
@@ -263,7 +274,7 @@ export function CompanyContactModal({ open, onClose }: Props) {
                 value={industry}
                 disabled={isSubmitting}
                 onChange={(e) => setIndustry(e.target.value)}
-                className="w-full appearance-none rounded-lg border border-zinc-200 bg-zinc-100 px-3 py-2.5 pr-10 text-zinc-900 outline-none transition focus:border-zinc-500 focus:bg-white disabled:opacity-60"
+                className="w-full appearance-none rounded-lg border border-zinc-200 bg-zinc-100 px-3 py-2 pr-10 text-zinc-900 outline-none transition focus:border-zinc-500 focus:bg-white disabled:opacity-60"
               >
                 {industryOptions.map((o) => (
                   <option key={o.value || "placeholder"} value={o.value}>
@@ -285,14 +296,14 @@ export function CompanyContactModal({ open, onClose }: Props) {
             </label>
             <textarea
               id="co-needs"
-              rows={4}
+              rows={3}
               value={needs}
               disabled={isSubmitting}
               onChange={(e) => {
                 setNeeds(e.target.value);
                 clearField("needs");
               }}
-              className={`w-full resize-y rounded-lg border bg-zinc-100 px-3 py-2.5 text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-zinc-500 focus:bg-white disabled:opacity-60 ${
+              className={`w-full resize-none rounded-lg border bg-zinc-100 px-3 py-2 text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-zinc-500 focus:bg-white disabled:opacity-60 ${
                 errors.needs ? "border-red-500" : "border-zinc-200"
               }`}
               placeholder="Berätta om vilka roller ni söker, antal personer, tidsplan och andra önskemål..."
@@ -300,19 +311,19 @@ export function CompanyContactModal({ open, onClose }: Props) {
             {errors.needs ? <p className="mt-1 text-sm text-red-600">{errors.needs}</p> : null}
           </div>
 
-          <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+          <div className="flex justify-end gap-2 pt-1">
             <button
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="inline-flex min-h-[44px] items-center justify-center rounded-md border border-zinc-300 bg-white px-5 py-2.5 text-sm font-medium text-zinc-900 transition hover:bg-zinc-50 disabled:opacity-60"
+              className="inline-flex min-h-10 items-center justify-center rounded-md border border-zinc-300 bg-white px-5 py-2 text-sm font-medium text-zinc-900 transition hover:bg-zinc-50 disabled:opacity-60"
             >
               Avbryt
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="inline-flex min-h-[44px] items-center justify-center rounded-md bg-[#080b22] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#13183b] disabled:opacity-60"
+              className="inline-flex min-h-10 items-center justify-center rounded-md bg-[#080b22] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#13183b] disabled:opacity-60"
             >
               {isSubmitting ? "Skickar…" : "Skicka förfrågan"}
             </button>
