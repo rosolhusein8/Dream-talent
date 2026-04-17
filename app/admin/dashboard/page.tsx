@@ -302,17 +302,29 @@ export default function AdminDashboardPage() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
 
+    // Hjälpfunktion: sortera så "Ny" visas överst, därefter övriga i oförändrad ordning.
+    const sortByStatusPriority = <T extends { status: string }>(items: T[], order: string[]) => {
+      const index = new Map(order.map((status, i) => [status, i]));
+      return [...items].sort((a, b) => {
+        const ia = index.get(a.status) ?? order.length;
+        const ib = index.get(b.status) ?? order.length;
+        return ia - ib;
+      });
+    };
+
     if (activeTab === "cv") {
-      return cvItems.filter((item) =>
+      const list = cvItems.filter((item) =>
         [item.fullName, item.email, item.competence].join(" ").toLowerCase().includes(q)
       );
+      return sortByStatusPriority(list, ["Ny", "Läst"]);
     }
 
 
     if (activeTab === "jobs") {
-      return applications.filter((item) =>
+      const list = applications.filter((item) =>
         [item.fullName, item.email, item.role].join(" ").toLowerCase().includes(q)
       );
+      return sortByStatusPriority(list, ["Ny", "Väntande", "Läst"]);
     }
     if (activeTab === "services") {
       return services.filter((item) =>
@@ -413,6 +425,19 @@ export default function AdminDashboardPage() {
   function removeService(id: string) {
     if (!confirm("Är du säker på att du vill ta bort tjänsten?")) return;
     setServices((prev) => prev.filter((s) => s.id !== id));
+  }
+
+  function removeCvItem(id: string) {
+    if (!confirm("Är du säker på att du vill ta bort den här CV-registreringen?")) return;
+    setCvItems((prev) => prev.filter((item) => item.id !== id));
+  }
+
+  function updateCvStatus(id: string, status: CVRegistration["status"]) {
+    setCvItems((prev) => prev.map((item) => (item.id === id ? { ...item, status } : item)));
+  }
+
+  function updateJobStatus(id: string, status: JobApplication["status"]) {
+    setApplications((prev) => prev.map((item) => (item.id === id ? { ...item, status } : item)));
   }
 
   async function handleLogout() {
@@ -544,12 +569,43 @@ export default function AdminDashboardPage() {
                 return (
                   <article key={cv.id} className="rounded-xl border border-zinc-200 p-4">
                     <div className="flex items-start justify-between gap-3">
-                      <div>
+                      <div className="space-y-2">
                         <h3 className="text-lg font-semibold text-zinc-900">{cv.fullName}</h3>
                         <div className="mt-2 space-y-1 text-sm text-zinc-600">
                           <p>{cv.email}</p>
                           <p>{cv.phone}</p>
                           <p>{cv.competence}</p>
+                        </div>
+                        <div className="mt-1 flex flex-wrap gap-2">
+                          <button
+                            type="button"
+                            onClick={() => updateCvStatus(cv.id, "Ny")}
+                            className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+                              cv.status === "Ny"
+                                ? "bg-blue-600 text-white"
+                                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
+                            }`}
+                          >
+                            Markera som ny
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => updateCvStatus(cv.id, "Läst")}
+                            className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+                              cv.status === "Läst"
+                                ? "bg-emerald-600 text-white"
+                                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
+                            }`}
+                          >
+                            Markera som läst
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => removeCvItem(cv.id)}
+                            className="rounded-full px-2.5 py-1 text-xs font-medium text-red-700 hover:bg-red-50 border border-red-200"
+                          >
+                            Ta bort
+                          </button>
                         </div>
                       </div>
                       <StatusBadge status={cv.status} />
@@ -593,7 +649,7 @@ export default function AdminDashboardPage() {
                 return (
                   <article key={job.id} className="rounded-xl border border-zinc-200 p-4">
                     <div className="flex items-start justify-between gap-3">
-                      <div>
+                      <div className="space-y-2">
                         <h3 className="text-lg font-semibold text-zinc-900">{job.fullName}</h3>
                         <div className="mt-2 space-y-1 text-sm text-zinc-600">
                           <p>{job.email}</p>
@@ -628,6 +684,41 @@ export default function AdminDashboardPage() {
                               Ladda ner CV
                             </a>
                           </div>
+                        </div>
+                        <div className="mt-1 flex flex-wrap gap-2">
+                          <button
+                            type="button"
+                            onClick={() => updateJobStatus(job.id, "Ny")}
+                            className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+                              job.status === "Ny"
+                                ? "bg-blue-600 text-white"
+                                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
+                            }`}
+                          >
+                            Markera som ny
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => updateJobStatus(job.id, "Väntande")}
+                            className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+                              job.status === "Väntande"
+                                ? "bg-amber-600 text-white"
+                                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
+                            }`}
+                          >
+                            Markera som väntande
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => updateJobStatus(job.id, "Läst")}
+                            className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+                              job.status === "Läst"
+                                ? "bg-emerald-600 text-white"
+                                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
+                            }`}
+                          >
+                            Markera som läst
+                          </button>
                         </div>
                       </div>
                       <StatusBadge status={job.status} />
