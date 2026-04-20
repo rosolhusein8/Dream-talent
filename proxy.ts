@@ -1,5 +1,5 @@
 /*
- * Fil: middleware.ts
+ * Fil: proxy.ts
  * Syfte: Skyddar admin-routes innan sidan laddas.
  * Vad koden gör: Kollar session-cookie, redirectar till login och sätter säkerhetsheaders.
  * Lär dig: Viktig fil för att förstå route-skydd i Next.js.
@@ -8,7 +8,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ADMIN_SESSION_COOKIE, isValidSessionToken } from "@/lib/admin/auth";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   // Samlar små säkerhetsheaders på ett ställe så adminrutter får samma skydd.
   const withSecurityHeaders = (response: NextResponse) => {

@@ -95,6 +95,7 @@ export default function JobDetailPage() {
         role: job.title,
         cvFileName: payload.cvFileName || cvFile.name,
         cvFilePath: payload.cvFilePath || "",
+        starred: false,
         createdAt: new Date().toISOString().slice(0, 10),
         status: "Ny" as const,
       };

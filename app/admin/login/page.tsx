@@ -7,10 +7,10 @@
  */
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function AdminLoginPage() {
+function AdminLoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get("next") || "/admin/dashboard";
@@ -109,5 +109,22 @@ export default function AdminLoginPage() {
         </form>
       </div>
     </main>
+  );
+}
+
+export default function AdminLoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-zinc-50 p-6">
+          <div className="mx-auto max-w-md rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
+            <h1 className="text-2xl font-semibold text-zinc-900">Admin login</h1>
+            <p className="mt-2 text-sm text-zinc-600">Laddar...</p>
+          </div>
+        </main>
+      }
+    >
+      <AdminLoginContent />
+    </Suspense>
   );
 }

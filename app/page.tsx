@@ -1,7 +1,7 @@
 /*
  * Fil: app/page.tsx
  * Syfte: Startsidan (landing page) för Dream Talent.
- * Vad koden gör: Renderar hero, sektioner för jobbsökande/företag, modaler och footer.
+ * Vad koden gör: Renderar hero, sektioner för jobbsökande/företag och modaler (footer i layout).
  * Lär dig: Följ data-arrayerna högst upp och se hur de mappas till UI-komponenter.
  * Felsökning: Kontrollera först imports, CTA-action-flöden och komponentprops.
  */
@@ -10,7 +10,6 @@ import Link from "next/link";
 import {
   Award,
   BriefcaseBusiness,
-  CircleDot,
   FileText,
   Leaf,
   MessageCircle,
@@ -277,7 +276,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="border-b border-black/5 bg-[#f3f8f3] py-12 sm:py-16">
+      <section className="border-b border-black/5 bg-gradient-to-b from-zinc-50 via-white to-zinc-100 py-12 sm:py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="relative overflow-hidden rounded-2xl shadow-sm">
             <Image
@@ -303,7 +302,7 @@ export default function Home() {
       {/* Våra tjänster: översikt av erbjudandet till företag. */}
       <section
         id="vara-tjanster"
-        className="scroll-mt-24 border-b border-zinc-200 bg-[#f8fbf8] py-16 sm:py-20"
+        className="scroll-mt-24 border-b border-zinc-200 bg-gradient-to-b from-zinc-50 via-white to-zinc-100 py-16 sm:py-20"
       >
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
@@ -335,7 +334,7 @@ export default function Home() {
       {/* Om oss: personlig sektion om Sara och Dream Talent. */}
       <section
         id="om-oss"
-        className="scroll-mt-24 border-b border-black/5 bg-gradient-to-b from-[#d9e5da] via-[#d1dfd2] to-[#c8d7c9] py-16 sm:py-28"
+        className="scroll-mt-24 border-b border-black/5 bg-gradient-to-b from-zinc-50 via-white to-zinc-100 py-16 sm:py-28"
       >
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
@@ -344,15 +343,19 @@ export default function Home() {
             </h2>
           </div>
 
-          <div className="mt-12 rounded-[2rem] border border-white/50 bg-[#f2f6f4]/95 p-8 shadow-[0_28px_60px_-20px_rgba(15,23,42,0.22)] backdrop-blur-[2px] sm:mt-14 sm:p-10 md:p-12 lg:p-14">
-            <div className="grid gap-12 md:grid-cols-[minmax(0,17rem)_1fr] md:items-start md:gap-14 lg:gap-16">
+          <div className="relative mt-12 overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-[#132452] via-[#1a2f66] to-[#223a78] p-8 shadow-[0_28px_64px_-18px_rgba(8,11,34,0.55)] ring-1 ring-white/5 sm:mt-14 sm:p-10 md:p-12 lg:p-14">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(90%_70%_at_15%_20%,rgba(255,255,255,0.09),transparent_55%)]"
+            />
+            <div className="relative grid gap-12 md:grid-cols-[minmax(0,17rem)_1fr] md:items-start md:gap-14 lg:gap-16">
               <div className="flex justify-center md:justify-start md:pt-1">
                 <div className="group relative">
                   <div
                     aria-hidden
-                    className="absolute -inset-1 rounded-full bg-gradient-to-br from-white/80 to-white/20 opacity-80 blur-sm transition group-hover:opacity-100"
+                    className="absolute -inset-1 rounded-full bg-gradient-to-br from-white/35 to-white/5 opacity-90 blur-sm transition group-hover:opacity-100"
                   />
-                  <div className="relative h-52 w-52 overflow-hidden rounded-full shadow-[0_24px_48px_-16px_rgba(15,23,42,0.35)] ring-[3px] ring-white sm:h-[17rem] sm:w-[17rem]">
+                  <div className="relative h-52 w-52 overflow-hidden rounded-full shadow-[0_0_40px_rgba(255,255,255,0.15)] ring-[3px] ring-white/90 sm:h-[17rem] sm:w-[17rem]">
                     <Image
                       src="/saraSellerfors.jpg"
                       alt="Sara Sellerfors"
@@ -367,10 +370,10 @@ export default function Home() {
               </div>
 
               <div className="min-w-0 max-w-prose text-left md:max-w-none">
-                <h3 className="text-[1.35rem] font-semibold leading-snug tracking-tight text-zinc-950 sm:text-2xl sm:leading-snug">
+                <h3 className="text-[1.35rem] font-semibold leading-snug tracking-tight text-white sm:text-2xl sm:leading-snug">
                   Sara Sellerfors – expert inom social hållbarhet och rekrytering
                 </h3>
-                <p className="mt-6 text-[15px] leading-[1.75] text-zinc-600 sm:text-base">
+                <p className="mt-6 text-[15px] leading-[1.75] text-slate-200/95 sm:text-base">
                   DreamTalent drivs av Sara Sellerfors som har över 25 års erfarenhet inom social
                   hållbarhet och rekrytering. Hon har under sin karriär arbetat som chef och ledare
                   både inom offentlig sektor och näringslivet. Hennes arbetssätt har alltid varit
@@ -378,13 +381,13 @@ export default function Home() {
                   att ge dem som inte alltid passar in i den traditionella mallen en chans på
                   arbetsmarknaden.
                 </p>
-                <p className="mt-5 text-[15px] leading-[1.75] text-zinc-600 sm:text-base">
+                <p className="mt-5 text-[15px] leading-[1.75] text-slate-200/95 sm:text-base">
                   Sara har tidigare varit VD för IKEAs första sociala företag och har lett
                   banbrytande initiativ där affärsnytta kombineras med samhällsansvar. Med djup
                   förståelse för både rekrytering, social hållbarhet och ledarskap hjälper hon idag
                   arbetsgivare att bygga inkluderande och hållbara team.
                 </p>
-                <blockquote className="mt-8 border-l-[3px] border-[#080b22] pl-5 text-[15px] font-medium leading-[1.75] text-zinc-900 sm:text-base">
+                <blockquote className="mt-8 border-l-[3px] border-amber-300/90 pl-5 text-[15px] font-medium leading-[1.75] text-white sm:text-base">
                   Hon brinner för att skapa arbetsplatser där människor får växa – även de som inte
                   alltid passar in i den traditionella normen.
                 </blockquote>
@@ -394,7 +397,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Kontakt + footer: sista CTA och generell sidinformation. */}
+      {/* Kontakt: sista CTA innan den gemensamma footern (layout). */}
       <section
         id="kontakt"
         className="scroll-mt-24 bg-white py-16 sm:py-20"
@@ -414,45 +417,6 @@ export default function Home() {
           </Link>
         </div>
       </section>
-
-      <footer className="border-t border-zinc-200 bg-zinc-950 text-zinc-300">
-        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-10 sm:px-6 lg:grid-cols-3 lg:px-8">
-          <div>
-            <p className="text-base font-semibold text-white">Dream Talent</p>
-            <p className="mt-3 text-sm leading-relaxed text-zinc-400">
-              Vi kopplar samman drömmar med talanger genom hållbar och träffsäker rekrytering.
-            </p>
-          </div>
-
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-wide text-zinc-200">Snabblänkar</p>
-            <div className="mt-3 flex flex-col gap-2 text-sm">
-              <Link href="/#jobbsokande" className="transition hover:text-white">
-                För jobbsökande
-              </Link>
-              <Link href="/#foretag" className="transition hover:text-white">
-                För företag
-              </Link>
-              <Link href="/lediga-tjanster" className="transition hover:text-white">
-                Lediga tjänster
-              </Link>
-              <Link href="/kontakt" className="transition hover:text-white">
-                Kontakt
-              </Link>
-            </div>
-          </div>
-
-          <div className="lg:text-right">
-            <p className="text-sm font-semibold uppercase tracking-wide text-zinc-200">Intern</p>
-            <div className="mt-3 flex flex-col gap-2 text-sm lg:items-end">
-              <Link href="/admin/dashboard" className="text-zinc-400 transition hover:text-zinc-200">
-                Admin
-              </Link>
-              <p className="text-zinc-500">© {new Date().getFullYear()} Dream Talent</p>
-            </div>
-          </div>
-        </div>
-      </footer>
     </main>
   );
 }

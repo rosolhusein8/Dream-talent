@@ -34,6 +34,7 @@ export type CVRegistration = {
   competence: string;
   cvFileName?: string;
   cvFilePath?: string;
+  starred?: boolean;
   createdAt: string;
   status: "Ny" | "Läst";
 };
@@ -46,6 +47,7 @@ export type JobApplication = {
   role: string;
   cvFileName?: string;
   cvFilePath?: string;
+  starred?: boolean;
   createdAt: string;
   status: "Ny" | "Läst" | "Väntande";
 };

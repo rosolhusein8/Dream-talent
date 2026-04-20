@@ -15,6 +15,7 @@ import {
   Download,
   FileText,
   Search,
+  Star,
   User,
 } from "lucide-react";
 import {
@@ -116,6 +117,7 @@ export default function AdminDashboardPage() {
   const JOB_APPLICATIONS_STORAGE_KEY = "admin.jobApplications";
   const [activeTab, setActiveTab] = useState<AdminTab>("company");
   const [query, setQuery] = useState("");
+  const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [cvItems, setCvItems] = useState<CVRegistration[]>(cvRegistrations);
   const [services, setServices] = useState<ServiceItem[]>(mockServices);
   const [applications, setApplications] = useState<JobApplication[]>(jobApplications);
@@ -156,6 +158,7 @@ export default function AdminDashboardPage() {
         const competence = typeof item.competence === "string" ? item.competence : "";
         const cvFileName = typeof item.cvFileName === "string" ? item.cvFileName : undefined;
         const cvFilePath = typeof item.cvFilePath === "string" ? item.cvFilePath : undefined;
+        const starred = item.starred === true;
         const createdAt =
           typeof item.createdAt === "string" && item.createdAt
             ? item.createdAt
@@ -169,6 +172,7 @@ export default function AdminDashboardPage() {
           competence,
           cvFileName,
           cvFilePath,
+          starred,
           createdAt,
           status,
         } as CVRegistration;
@@ -254,6 +258,7 @@ export default function AdminDashboardPage() {
         const role = typeof item.role === "string" ? item.role : "";
         const cvFileName = typeof item.cvFileName === "string" ? item.cvFileName : undefined;
         const cvFilePath = typeof item.cvFilePath === "string" ? item.cvFilePath : undefined;
+        const starred = item.starred === true;
         const createdAt =
           typeof item.createdAt === "string" && item.createdAt
             ? item.createdAt
@@ -268,6 +273,7 @@ export default function AdminDashboardPage() {
           role,
           cvFileName,
           cvFilePath,
+          starred,
           createdAt,
           status,
         } as JobApplication;
@@ -302,10 +308,16 @@ export default function AdminDashboardPage() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
 
-    // Hjälpfunktion: sortera så "Ny" visas överst, därefter övriga i oförändrad ordning.
-    const sortByStatusPriority = <T extends { status: string }>(items: T[], order: string[]) => {
+    // Hjälpfunktion: favoriter överst, därefter statusordning.
+    const sortByStarThenStatus = <T extends { status: string; starred?: boolean }>(
+      items: T[],
+      order: string[]
+    ) => {
       const index = new Map(order.map((status, i) => [status, i]));
       return [...items].sort((a, b) => {
+        const sa = a.starred === true ? 1 : 0;
+        const sb = b.starred === true ? 1 : 0;
+        if (sa !== sb) return sb - sa;
         const ia = index.get(a.status) ?? order.length;
         const ib = index.get(b.status) ?? order.length;
         return ia - ib;
@@ -313,18 +325,21 @@ export default function AdminDashboardPage() {
     };
 
     if (activeTab === "cv") {
-      const list = cvItems.filter((item) =>
-        [item.fullName, item.email, item.competence].join(" ").toLowerCase().includes(q)
-      );
-      return sortByStatusPriority(list, ["Ny", "Läst"]);
+      const list = cvItems
+        .filter((item) =>
+          [item.fullName, item.email, item.competence].join(" ").toLowerCase().includes(q)
+        )
+        .filter((item) => !favoritesOnly || item.starred === true);
+      return sortByStarThenStatus(list, ["Ny", "Läst"]);
     }
 
-
     if (activeTab === "jobs") {
-      const list = applications.filter((item) =>
-        [item.fullName, item.email, item.role].join(" ").toLowerCase().includes(q)
-      );
-      return sortByStatusPriority(list, ["Ny", "Väntande", "Läst"]);
+      const list = applications
+        .filter((item) =>
+          [item.fullName, item.email, item.role].join(" ").toLowerCase().includes(q)
+        )
+        .filter((item) => !favoritesOnly || item.starred === true);
+      return sortByStarThenStatus(list, ["Ny", "Väntande", "Läst"]);
     }
     if (activeTab === "services") {
       return services.filter((item) =>
@@ -350,7 +365,7 @@ export default function AdminDashboardPage() {
         .toLowerCase()
         .includes(q)
     );
-  }, [activeTab, query, services, applications, cvItems]);
+  }, [activeTab, query, favoritesOnly, services, applications, cvItems]);
 
   function resetServiceForm() {
     setServiceForm({
@@ -440,6 +455,18 @@ export default function AdminDashboardPage() {
     setApplications((prev) => prev.map((item) => (item.id === id ? { ...item, status } : item)));
   }
 
+  function toggleCvStar(id: string) {
+    setCvItems((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, starred: !item.starred } : item))
+    );
+  }
+
+  function toggleJobStar(id: string) {
+    setApplications((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, starred: !item.starred } : item))
+    );
+  }
+
   async function handleLogout() {
     await fetch("/api/admin/logout", { method: "POST" });
     router.replace("/admin/login");
@@ -502,8 +529,8 @@ export default function AdminDashboardPage() {
             </TabButton>
           </div>
 
-          <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-            <div className="relative flex-1">
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <div className="relative min-w-0 flex-1 sm:min-w-[200px]">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
               <input
                 value={query}
@@ -512,6 +539,26 @@ export default function AdminDashboardPage() {
                 className="h-10 w-full rounded-lg border border-zinc-200 bg-zinc-50 pl-9 pr-3 text-sm outline-none transition focus:border-zinc-400"
               />
             </div>
+            {activeTab === "cv" || activeTab === "jobs" ? (
+              <button
+                type="button"
+                onClick={() => setFavoritesOnly((v) => !v)}
+                aria-pressed={favoritesOnly}
+                title={favoritesOnly ? "Visa alla" : "Visa bara favoriter"}
+                className={`inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg border px-4 text-sm font-medium transition ${
+                  favoritesOnly
+                    ? "border-amber-300 bg-amber-50 text-amber-900"
+                    : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50"
+                }`}
+              >
+                <Star
+                  className="h-4 w-4"
+                  strokeWidth={1.75}
+                  fill={favoritesOnly ? "currentColor" : "none"}
+                />
+                Bara favoriter
+              </button>
+            ) : null}
             <button
               type="button"
               className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 text-sm font-medium text-zinc-700 transition hover:bg-zinc-50"
@@ -608,7 +655,26 @@ export default function AdminDashboardPage() {
                           </button>
                         </div>
                       </div>
-                      <StatusBadge status={cv.status} />
+                      <div className="flex shrink-0 flex-col items-end gap-2">
+                        <button
+                          type="button"
+                          onClick={() => toggleCvStar(cv.id)}
+                          title={cv.starred ? "Ta bort från favoriter" : "Lägg till som favorit"}
+                          aria-pressed={cv.starred === true}
+                          className={`rounded-full p-1.5 transition ${
+                            cv.starred
+                              ? "text-amber-500 hover:bg-amber-50"
+                              : "text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700"
+                          }`}
+                        >
+                          <Star
+                            className="h-5 w-5"
+                            strokeWidth={1.75}
+                            fill={cv.starred ? "currentColor" : "none"}
+                          />
+                        </button>
+                        <StatusBadge status={cv.status} />
+                      </div>
                     </div>
                     <div className="mt-3 flex flex-wrap gap-2">
                       <a
@@ -721,7 +787,26 @@ export default function AdminDashboardPage() {
                           </button>
                         </div>
                       </div>
-                      <StatusBadge status={job.status} />
+                      <div className="flex shrink-0 flex-col items-end gap-2">
+                        <button
+                          type="button"
+                          onClick={() => toggleJobStar(job.id)}
+                          title={job.starred ? "Ta bort från favoriter" : "Lägg till som favorit"}
+                          aria-pressed={job.starred === true}
+                          className={`rounded-full p-1.5 transition ${
+                            job.starred
+                              ? "text-amber-500 hover:bg-amber-50"
+                              : "text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700"
+                          }`}
+                        >
+                          <Star
+                            className="h-5 w-5"
+                            strokeWidth={1.75}
+                            fill={job.starred ? "currentColor" : "none"}
+                          />
+                        </button>
+                        <StatusBadge status={job.status} />
+                      </div>
                     </div>
                     <p className="mt-4 text-xs text-zinc-500">{job.createdAt}</p>
                   </article>

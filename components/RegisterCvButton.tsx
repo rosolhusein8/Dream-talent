@@ -87,6 +87,7 @@ export function RegisterCvButton({ className, label }: Props) {
         competence: desiredRole.trim() || "Ej angiven",
         cvFileName: data.cvFileName || cvFile.name,
         cvFilePath: data.cvFilePath || "",
+        starred: false,
         createdAt: new Date().toISOString().slice(0, 10),
         status: "Ny" as const,
       };
